@@ -346,6 +346,7 @@ namespace GameFrameX.FairyGUI.Runtime
 
         protected override void Awake()
         {
+            IsAutoRegister = false;
             base.Awake();
             _root = new FUI(GRoot.inst);
             _root.Show();

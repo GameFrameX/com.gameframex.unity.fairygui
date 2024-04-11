@@ -67,6 +67,7 @@ namespace GameFrameX.FairyGUI.Runtime
 
         protected override void Awake()
         {
+            IsAutoRegister = false;
             base.Awake();
             UIPackage.SetAsyncLoadResource(new FairyGUILoadAsyncResourceHelper());
         }
