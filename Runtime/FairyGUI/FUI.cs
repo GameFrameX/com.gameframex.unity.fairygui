@@ -359,7 +359,7 @@ namespace GameFrameX.FairyGUI.Runtime
             if (ui.IsInitVisible)
             {
                 // 显示UI
-                ui.Show();
+                ui.Show(UserData);
             }
         }
 
