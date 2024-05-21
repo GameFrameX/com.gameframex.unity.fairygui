@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FairyGUI;
 using GameFrameX.Asset.Runtime;
 using GameFrameX.Runtime;
@@ -22,15 +23,19 @@ namespace GameFrameX.FairyGUI.Runtime
             {
                 if (descFilePath.IndexOf(Utility.Asset.Path.BundlesDirectoryName, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    package = UIPackage.AddPackage(descFilePath, LoadPackageInternal);
+                    UIPackage.AddPackageAsync(descFilePath, (uiPackage) =>
+                    {
+                        package = uiPackage;
+                        package.LoadAllAssets();
+                        _uiPackages.Add(descFilePath, package);
+                    });
                 }
                 else
                 {
                     package = UIPackage.AddPackage(descFilePath);
+                    package.LoadAllAssets();
+                    _uiPackages.Add(descFilePath, package);
                 }
-
-                package.LoadAllAssets();
-                _uiPackages.Add(descFilePath, package);
             }
         }
 
@@ -70,42 +75,6 @@ namespace GameFrameX.FairyGUI.Runtime
             IsAutoRegister = false;
             base.Awake();
             UIPackage.SetAsyncLoadResource(new FairyGUILoadAsyncResourceHelper());
-        }
-
-
-        public object LoadPackageInternal(string assetName, string extension, Type type, out DestroyMethod method)
-        {
-            method = DestroyMethod.Unload;
-            string uiNamePath = $"{assetName}{extension}";
-            switch (extension)
-            {
-                case Utility.Const.FileNameSuffix.Binary:
-                {
-                    var req = _assetComponent.LoadAssetSync<UnityEngine.TextAsset>(uiNamePath);
-                    return req.AssetObject;
-                }
-                case Utility.Const.FileNameSuffix.PNG: //如果FGUI导出时没有选择分离通明通道，会因为加载不到!a结尾的Asset而报错，但是不影响运行
-                {
-                    if (assetName.IndexOf("!a", StringComparison.OrdinalIgnoreCase) > -1)
-                    {
-                        return null;
-                    }
-
-                    var req = _assetComponent.LoadAssetSync<UnityEngine.Texture>(uiNamePath);
-                    return req.AssetObject;
-                }
-                case Utility.Const.FileNameSuffix.Wav:
-                {
-                    var req = _assetComponent.LoadAssetSync<AudioClip>(uiNamePath);
-
-                    return req.AssetObject;
-                }
-                default:
-                {
-                    var req = _assetComponent.LoadAssetSync(uiNamePath, type);
-                    return req.AssetObject;
-                }
-            }
         }
 
         private AssetComponent _assetComponent;
