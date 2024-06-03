@@ -44,8 +44,9 @@ namespace GameFrameX.FairyGUI.Runtime
             GameFrameworkGuard.NotNull(_packageComponent, nameof(_packageComponent));
         }
 
-        public void OnDestroy()
+        private void OnDestroy()
         {
+            RemoveAll();
             _root.Dispose();
             _root = null;
         }
@@ -120,6 +121,9 @@ namespace GameFrameX.FairyGUI.Runtime
         }
 
 
+        /// <summary>
+        /// 从UI管理列表中删除所有的UI
+        /// </summary>
         public void RemoveAll()
         {
             foreach (var keyValuePair in _uiDictionary)
@@ -137,6 +141,8 @@ namespace GameFrameX.FairyGUI.Runtime
 
                 kv.Value.Clear();
             }
+
+            _dictionary.Clear();
         }
 
         private FUI Add(FUI ui, UILayer layer)
@@ -191,72 +197,107 @@ namespace GameFrameX.FairyGUI.Runtime
             return ui;
         }
 
+        /// <summary>
+        /// 根据UI名称从UI管理列表中移除
+        /// </summary>
+        /// <param name="uiName"></param>
+        /// <returns></returns>
         public bool Remove(string uiName)
         {
             GameFrameworkGuard.NotNullOrEmpty(uiName, nameof(uiName));
             if (SystemRoot.Remove(uiName))
             {
+                _dictionary[UILayer.System].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (NotifyRoot.Remove(uiName))
             {
+                _dictionary[UILayer.Notify].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (HiddenRoot.Remove(uiName))
             {
+                _dictionary[UILayer.Hidden].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (FloorRoot.Remove(uiName))
             {
+                _dictionary[UILayer.Floor].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (NormalRoot.Remove(uiName))
             {
+                _dictionary[UILayer.Normal].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (FixedRoot.Remove(uiName))
             {
+                _dictionary[UILayer.Fixed].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (WindowRoot.Remove(uiName))
             {
+                _dictionary[UILayer.Window].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (TipRoot.Remove(uiName))
             {
+                _dictionary[UILayer.Tip].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (BlackBoardRoot.Remove(uiName))
             {
+                _dictionary[UILayer.BlackBoard].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (DialogueRoot.Remove(uiName))
             {
+                _dictionary[UILayer.Dialogue].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (GuideRoot.Remove(uiName))
             {
+                _dictionary[UILayer.Guide].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (LoadingRoot.Remove(uiName))
             {
+                _dictionary[UILayer.Loading].Remove(uiName);
+                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             return false;
         }
 
+        /// <summary>
+        /// 根据UI名称和层级从UI管理列表中移除
+        /// </summary>
+        /// <param name="uiName">UI名称</param>
+        /// <param name="layer">层级</param>
+        /// <returns></returns>
         public void Remove(string uiName, UILayer layer)
         {
             GameFrameworkGuard.NotNullOrEmpty(uiName, nameof(uiName));
@@ -264,43 +305,62 @@ namespace GameFrameX.FairyGUI.Runtime
             {
                 case UILayer.Hidden:
                     HiddenRoot.Remove(uiName);
+                    _dictionary[UILayer.Hidden].Remove(uiName);
                     break;
                 case UILayer.Floor:
                     FloorRoot.Remove(uiName);
+                    _dictionary[UILayer.Floor].Remove(uiName);
                     break;
                 case UILayer.Normal:
                     NormalRoot.Remove(uiName);
+                    _dictionary[UILayer.Normal].Remove(uiName);
                     break;
                 case UILayer.Fixed:
                     FixedRoot.Remove(uiName);
+                    _dictionary[UILayer.Fixed].Remove(uiName);
                     break;
                 case UILayer.Window:
                     WindowRoot.Remove(uiName);
+                    _dictionary[UILayer.Window].Remove(uiName);
                     break;
                 case UILayer.Tip:
                     TipRoot.Remove(uiName);
+                    _dictionary[UILayer.Tip].Remove(uiName);
                     break;
                 case UILayer.BlackBoard:
                     BlackBoardRoot.Remove(uiName);
+                    _dictionary[UILayer.BlackBoard].Remove(uiName);
                     break;
                 case UILayer.Dialogue:
                     DialogueRoot.Remove(uiName);
+                    _dictionary[UILayer.Dialogue].Remove(uiName);
                     break;
                 case UILayer.Guide:
                     GuideRoot.Remove(uiName);
+                    _dictionary[UILayer.Guide].Remove(uiName);
                     break;
                 case UILayer.Loading:
                     LoadingRoot.Remove(uiName);
+                    _dictionary[UILayer.Loading].Remove(uiName);
                     break;
                 case UILayer.Notify:
                     NotifyRoot.Remove(uiName);
+                    _dictionary[UILayer.Notify].Remove(uiName);
                     break;
                 case UILayer.System:
                     SystemRoot.Remove(uiName);
+                    _dictionary[UILayer.System].Remove(uiName);
                     break;
             }
+
+            _uiDictionary.Remove(uiName);
         }
 
+        /// <summary>
+        /// 判断UI名称是否在UI管理列表
+        /// </summary>
+        /// <param name="uiName">UI名称</param>
+        /// <returns></returns>
         public bool Has(string uiName)
         {
             GameFrameworkGuard.NotNullOrEmpty(uiName, nameof(uiName));
@@ -308,9 +368,9 @@ namespace GameFrameX.FairyGUI.Runtime
         }
 
         /// <summary>
-        /// 判断UI是否已创建。如果创建则。返回UI对象
+        /// 判断UI是否在UI管理列表，如果存在则返回对象，不存在返回空值
         /// </summary>
-        /// <param name="uiName"></param>
+        /// <param name="uiName">UI名称</param>
         /// <param name="fui"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -322,6 +382,12 @@ namespace GameFrameX.FairyGUI.Runtime
             return fui != null;
         }
 
+        /// <summary>
+        /// 根据UI名称获取UI对象
+        /// </summary>
+        /// <param name="uiName">UI名称</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T Get<T>(string uiName) where T : FUI
         {
             GameFrameworkGuard.NotNullOrEmpty(uiName, nameof(uiName));
@@ -333,6 +399,11 @@ namespace GameFrameX.FairyGUI.Runtime
             return null;
         }
 
+        /// <summary>
+        /// 根据UI名称获取UI对象
+        /// </summary>
+        /// <param name="uiName"></param>
+        /// <returns></returns>
         public FUI Get(string uiName)
         {
             GameFrameworkGuard.NotNullOrEmpty(uiName, nameof(uiName));
