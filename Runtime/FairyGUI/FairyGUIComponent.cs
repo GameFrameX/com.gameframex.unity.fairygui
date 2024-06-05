@@ -34,7 +34,7 @@ namespace GameFrameX.FairyGUI.Runtime
 
 
         private readonly Dictionary<UILayer, Dictionary<string, FUI>> _dictionary = new Dictionary<UILayer, Dictionary<string, FUI>>(16);
-        private readonly Dictionary<string, FUI> _uiDictionary = new Dictionary<string, FUI>(64);
+
 
         private FairyGUIPackageComponent _packageComponent;
 
@@ -126,17 +126,12 @@ namespace GameFrameX.FairyGUI.Runtime
         /// </summary>
         public void RemoveAll()
         {
-            foreach (var keyValuePair in _uiDictionary)
-            {
-                keyValuePair.Value.Dispose();
-            }
-
-            _uiDictionary.Clear();
             foreach (var kv in _dictionary)
             {
                 foreach (var fui in kv.Value)
                 {
                     Remove(fui.Key);
+                    fui.Value.Dispose();
                 }
 
                 kv.Value.Clear();
@@ -148,9 +143,9 @@ namespace GameFrameX.FairyGUI.Runtime
         private FUI Add(FUI ui, UILayer layer)
         {
             GameFrameworkGuard.NotNull(ui, nameof(ui));
-            if (!_uiDictionary.ContainsKey(ui.Name))
+            if (_dictionary[layer].ContainsKey(ui.Name))
             {
-                _uiDictionary[ui.Name] = ui;
+                return _dictionary[layer][ui.Name];
             }
 
             _dictionary[layer][ui.Name] = ui;
@@ -208,84 +203,73 @@ namespace GameFrameX.FairyGUI.Runtime
             if (SystemRoot.Remove(uiName))
             {
                 _dictionary[UILayer.System].Remove(uiName);
-                _uiDictionary.Remove(uiName);
+
                 return true;
             }
 
             if (NotifyRoot.Remove(uiName))
             {
                 _dictionary[UILayer.Notify].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (HiddenRoot.Remove(uiName))
             {
                 _dictionary[UILayer.Hidden].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (FloorRoot.Remove(uiName))
             {
                 _dictionary[UILayer.Floor].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (NormalRoot.Remove(uiName))
             {
                 _dictionary[UILayer.Normal].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (FixedRoot.Remove(uiName))
             {
                 _dictionary[UILayer.Fixed].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (WindowRoot.Remove(uiName))
             {
                 _dictionary[UILayer.Window].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (TipRoot.Remove(uiName))
             {
                 _dictionary[UILayer.Tip].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (BlackBoardRoot.Remove(uiName))
             {
                 _dictionary[UILayer.BlackBoard].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (DialogueRoot.Remove(uiName))
             {
                 _dictionary[UILayer.Dialogue].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (GuideRoot.Remove(uiName))
             {
                 _dictionary[UILayer.Guide].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
             if (LoadingRoot.Remove(uiName))
             {
                 _dictionary[UILayer.Loading].Remove(uiName);
-                _uiDictionary.Remove(uiName);
                 return true;
             }
 
@@ -352,8 +336,6 @@ namespace GameFrameX.FairyGUI.Runtime
                     _dictionary[UILayer.System].Remove(uiName);
                     break;
             }
-
-            _uiDictionary.Remove(uiName);
         }
 
         /// <summary>
@@ -390,13 +372,18 @@ namespace GameFrameX.FairyGUI.Runtime
         /// <returns></returns>
         public T Get<T>(string uiName) where T : FUI
         {
+            T fui = default;
             GameFrameworkGuard.NotNullOrEmpty(uiName, nameof(uiName));
-            if (_uiDictionary.TryGetValue(uiName, out var ui))
+            foreach (var kv in _dictionary)
             {
-                return ui as T;
+                if (kv.Value.TryGetValue(uiName, out var ui))
+                {
+                    fui = ui as T;
+                    break;
+                }
             }
 
-            return null;
+            return fui;
         }
 
         /// <summary>
@@ -407,9 +394,12 @@ namespace GameFrameX.FairyGUI.Runtime
         public FUI Get(string uiName)
         {
             GameFrameworkGuard.NotNullOrEmpty(uiName, nameof(uiName));
-            if (_uiDictionary.TryGetValue(uiName, out var ui))
+            foreach (var kv in _dictionary)
             {
-                return ui;
+                if (kv.Value.TryGetValue(uiName, out var ui))
+                {
+                    return ui;
+                }
             }
 
             return null;
