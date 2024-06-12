@@ -17,26 +17,29 @@ namespace GameFrameX.FairyGUI.Runtime
     {
         private readonly Dictionary<string, UIPackage> _uiPackages = new Dictionary<string, UIPackage>(32);
 
-        public void AddPackage(string descFilePath)
+        public Task<UIPackage> AddPackage(string descFilePath)
         {
             if (!_uiPackages.TryGetValue(descFilePath, out var package))
             {
                 if (descFilePath.IndexOf(Utility.Asset.Path.BundlesDirectoryName, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
+                    var tcs = new TaskCompletionSource<UIPackage>();
                     UIPackage.AddPackageAsync(descFilePath, (uiPackage) =>
                     {
                         package = uiPackage;
                         package.LoadAllAssets();
                         _uiPackages.Add(descFilePath, package);
+                        tcs.SetResult(uiPackage);
                     });
+                    return tcs.Task;
                 }
-                else
-                {
-                    package = UIPackage.AddPackage(descFilePath);
-                    package.LoadAllAssets();
-                    _uiPackages.Add(descFilePath, package);
-                }
+
+                package = UIPackage.AddPackage(descFilePath);
+                package.LoadAllAssets();
+                _uiPackages.Add(descFilePath, package);
             }
+
+            return Task.FromResult(package);
         }
 
         public void RemovePackage(string descFilePath)
