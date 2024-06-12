@@ -107,9 +107,15 @@ namespace GameFrameX.FairyGUI.Runtime
         /// <exception cref="ArgumentNullException">创建器不存在,引发参数异常</exception>
         public T Add<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, bool isFullScreen = false, object userData = null) where T : FUI
         {
+            var ui = AddInner(creator, descFilePath, layer, isFullScreen, userData);
+            return ui.Result;
+        }
+
+        private async Task<T> AddInner<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, bool isFullScreen = false, object userData = null) where T : FUI
+        {
             GameFrameworkGuard.NotNull(creator, nameof(creator));
             GameFrameworkGuard.NotNull(descFilePath, nameof(descFilePath));
-            _packageComponent.AddPackage(descFilePath).Wait(TimeSpan.FromSeconds(30));
+            await _packageComponent.AddPackage(descFilePath);
             T ui = creator(userData);
             Add(ui, layer);
             if (isFullScreen)
@@ -119,7 +125,6 @@ namespace GameFrameX.FairyGUI.Runtime
 
             return ui;
         }
-
 
         /// <summary>
         /// 从UI管理列表中删除所有的UI
