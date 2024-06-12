@@ -109,7 +109,7 @@ namespace GameFrameX.FairyGUI.Runtime
         {
             GameFrameworkGuard.NotNull(creator, nameof(creator));
             GameFrameworkGuard.NotNull(descFilePath, nameof(descFilePath));
-            _packageComponent.AddPackage(descFilePath).Wait();
+            _packageComponent.AddPackage(descFilePath).Wait(TimeSpan.FromSeconds(30));
             T ui = creator(userData);
             Add(ui, layer);
             if (isFullScreen)

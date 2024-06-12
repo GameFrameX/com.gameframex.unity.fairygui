@@ -19,11 +19,11 @@ namespace GameFrameX.FairyGUI.Runtime
 
         public Task<UIPackage> AddPackage(string descFilePath)
         {
+            var tcs = new TaskCompletionSource<UIPackage>();
             if (!_uiPackages.TryGetValue(descFilePath, out var package))
             {
                 if (descFilePath.IndexOf(Utility.Asset.Path.BundlesDirectoryName, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    var tcs = new TaskCompletionSource<UIPackage>();
                     UIPackage.AddPackageAsync(descFilePath, (uiPackage) =>
                     {
                         package = uiPackage;
@@ -37,9 +37,14 @@ namespace GameFrameX.FairyGUI.Runtime
                 package = UIPackage.AddPackage(descFilePath);
                 package.LoadAllAssets();
                 _uiPackages.Add(descFilePath, package);
+                tcs.SetResult(package);
+            }
+            else
+            {
+                tcs.SetResult(package);
             }
 
-            return Task.FromResult(package);
+            return tcs.Task;
         }
 
         public void RemovePackage(string descFilePath)
