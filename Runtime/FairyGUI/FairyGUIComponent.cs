@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using FairyGUI;
 using GameFrameX.Runtime;
 using UnityEngine;
@@ -75,11 +75,11 @@ namespace GameFrameX.FairyGUI.Runtime
         /// <param name="userData">用户自定义数据</param>
         /// <typeparam name="T"></typeparam>
         /// <returns>返回创建后的UI对象</returns>
-        public Task<T> AddAsync<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, bool isFullScreen = false, object userData = null) where T : FUI
+        public UniTask<T> AddAsync<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, bool isFullScreen = false, object userData = null) where T : FUI
         {
             GameFrameworkGuard.NotNull(creator, nameof(creator));
             GameFrameworkGuard.NotNull(descFilePath, nameof(descFilePath));
-            var ts = new TaskCompletionSource<T>();
+            var ts = new UniTaskCompletionSource<T>();
             UIPackage.AddPackageAsync(descFilePath, (obj) =>
             {
                 T ui = creator(userData);
@@ -107,15 +107,9 @@ namespace GameFrameX.FairyGUI.Runtime
         /// <exception cref="ArgumentNullException">创建器不存在,引发参数异常</exception>
         public T Add<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, bool isFullScreen = false, object userData = null) where T : FUI
         {
-            var ui = AddInner(creator, descFilePath, layer, isFullScreen, userData);
-            return ui.Result;
-        }
-
-        private async Task<T> AddInner<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, bool isFullScreen = false, object userData = null) where T : FUI
-        {
             GameFrameworkGuard.NotNull(creator, nameof(creator));
             GameFrameworkGuard.NotNull(descFilePath, nameof(descFilePath));
-            await _packageComponent.AddPackage(descFilePath);
+            _packageComponent.AddPackage(descFilePath);
             T ui = creator(userData);
             Add(ui, layer);
             if (isFullScreen)

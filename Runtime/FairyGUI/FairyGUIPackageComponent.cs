@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using FairyGUI;
 using GameFrameX.Asset.Runtime;
 using GameFrameX.Runtime;
@@ -17,34 +16,32 @@ namespace GameFrameX.FairyGUI.Runtime
     {
         private readonly Dictionary<string, UIPackage> _uiPackages = new Dictionary<string, UIPackage>(32);
 
-        public Task<UIPackage> AddPackage(string descFilePath)
+        public UniTask<UIPackage> AddPackageAsync(string descFilePath)
         {
-            var tcs = new TaskCompletionSource<UIPackage>();
             if (!_uiPackages.TryGetValue(descFilePath, out var package))
             {
-                if (descFilePath.IndexOf(Utility.Asset.Path.BundlesDirectoryName, StringComparison.OrdinalIgnoreCase) >= 0)
+                var tcs = new UniTaskCompletionSource<UIPackage>();
+                UIPackage.AddPackageAsync(descFilePath, (uiPackage) =>
                 {
-                    UIPackage.AddPackageAsync(descFilePath, (uiPackage) =>
-                    {
-                        package = uiPackage;
-                        package.LoadAllAssets();
-                        _uiPackages.Add(descFilePath, package);
-                        tcs.SetResult(uiPackage);
-                    });
-                    return tcs.Task;
-                }
+                    package = uiPackage;
+                    package.LoadAllAssets();
+                    _uiPackages.Add(descFilePath, package);
+                    tcs.TrySetResult(package);
+                });
+                return tcs.Task;
+            }
 
+            return UniTask.FromResult(package);
+        }
+
+        public void AddPackage(string descFilePath)
+        {
+            if (!_uiPackages.TryGetValue(descFilePath, out var package))
+            {
                 package = UIPackage.AddPackage(descFilePath);
                 package.LoadAllAssets();
                 _uiPackages.Add(descFilePath, package);
-                tcs.SetResult(package);
             }
-            else
-            {
-                tcs.SetResult(package);
-            }
-
-            return tcs.Task;
         }
 
         public void RemovePackage(string descFilePath)
