@@ -61,7 +61,7 @@ namespace GameFrameX.FairyGUI.Runtime
         /// </summary>
         protected virtual void Init()
         {
-            Log.Info("Init " + Name);
+            // Log.Info("Init " + Name);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace GameFrameX.FairyGUI.Runtime
         /// </summary>
         protected virtual void OnShow()
         {
-            Log.Info("OnShow " + Name);
+            // Log.Info("OnShow " + Name);
         }
 
 
@@ -78,7 +78,7 @@ namespace GameFrameX.FairyGUI.Runtime
         /// </summary>
         public virtual void Refresh()
         {
-            Log.Info("Refresh " + Name);
+            // Log.Info("Refresh " + Name);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace GameFrameX.FairyGUI.Runtime
         /// </summary>
         protected virtual void OnHide()
         {
-            Log.Info("OnHide " + Name);
+            // Log.Info("OnHide " + Name);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace GameFrameX.FairyGUI.Runtime
         /// </summary>
         protected virtual void OnDispose()
         {
-            Log.Info("OnDispose " + Name);
+            // Log.Info("OnDispose " + Name);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace GameFrameX.FairyGUI.Runtime
         public void Show(object userData = null)
         {
             UserData = userData;
-            Log.Info("Show " + Name);
+            // Log.Info("Show " + Name);
             if (Visible)
             {
                 OnShowAction?.Invoke(this);
@@ -121,7 +121,7 @@ namespace GameFrameX.FairyGUI.Runtime
         /// </summary>
         public void Hide()
         {
-            Log.Info("Hide " + Name);
+            // Log.Info("Hide " + Name);
             if (!Visible)
             {
                 OnHideAction?.Invoke(this);
