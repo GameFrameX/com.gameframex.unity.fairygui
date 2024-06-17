@@ -1,5 +1,5 @@
 {
-  "name": "com.alianblank.gameframex.unity.fairygui",
+  "name": "com.gameframex.unity.fairygui",
   "displayName": "Game Frame X FairyGUI",
   "category": "Game Framework X",
   "description": "Game Frame X FairyGUI Component",
@@ -9,8 +9,8 @@
     "Game Framework X"
   ],
   "repository": {
-    "name": "com.alianblank.gameframex.unity.fairygui",
-    "url": "https://github.com/AlianBlank/com.alianblank.gameframex.unity.fairygui.git",
+    "name": "com.gameframex.unity.fairygui",
+    "url": "https://github.com/AlianBlank/com.gameframex.unity.fairygui.git",
     "type": "git"
   },
   "author": {
