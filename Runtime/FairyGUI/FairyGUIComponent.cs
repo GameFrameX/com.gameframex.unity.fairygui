@@ -125,9 +125,16 @@ namespace GameFrameX.FairyGUI.Runtime
         /// </summary>
         public void RemoveAll()
         {
+            var tempKv = new Dictionary<string, FUI>(32);
             foreach (var kv in _dictionary)
             {
+                tempKv.Clear();
                 foreach (var fui in kv.Value)
+                {
+                    tempKv[fui.Key] = fui.Value;
+                }
+
+                foreach (var fui in tempKv)
                 {
                     Remove(fui.Key);
                     fui.Value.Dispose();
@@ -136,6 +143,7 @@ namespace GameFrameX.FairyGUI.Runtime
                 kv.Value.Clear();
             }
 
+            tempKv.Clear();
             _dictionary.Clear();
         }
 
