@@ -1,13 +1,14 @@
 {
     "name": "GameFrameX.FairyGUI.Runtime",
+    "rootNamespace": "GameFrameX.FairyGUI.Runtime",
     "references": [
         "GameFrameX.Runtime",
         "GameFrameX.Asset.Runtime",
         "FairyGUI.Runtime",
         "UniTask.Runtime",
-        "YooAsset.Runtime"
+        "YooAsset.Runtime",
+        "spine-unity.Runtime"
     ],
-    "rootNamespace": "GameFrameX.FairyGUI.Runtime",
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
@@ -15,6 +16,17 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.gameframex.unity.esotericsoftware.spine.spine-unity",
+            "expression": "",
+            "define": "FAIRYGUI_SPINE"
+        },
+        {
+            "name": "com.esotericsoftware.spine.spine-csharp",
+            "expression": "",
+            "define": "FAIRYGUI_SPINE"
+        }
+    ],
     "noEngineReferences": false
 }
