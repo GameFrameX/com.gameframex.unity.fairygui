@@ -20,7 +20,6 @@ namespace GameFrameX.FairyGUI.Runtime
             _ = typeof(OpenUIFormSuccessEventArgs);
             _ = typeof(OpenUIFormUpdateEventArgs);
             _ = typeof(UIManager);
-            _ = typeof(UILayer);
             _ = typeof(GObjectHelper);
             _ = typeof(FUI);
             _ = typeof(FairyGUIComponent);
