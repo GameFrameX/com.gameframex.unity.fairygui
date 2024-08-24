@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -7,12 +6,11 @@ namespace GameFrameX.FairyGUI.Runtime
     [Preserve]
     public class GameFrameXFairyGUICroppingHelper : MonoBehaviour
     {
-        private Type[] m_Types;
-
+        private System.Type[] _types;
         [Preserve]
         private void Start()
         {
-            m_Types = new[]
+            _types = new[]
             {
                 typeof(CloseUIFormCompleteEventArgs),
                 typeof(IUIForm),
