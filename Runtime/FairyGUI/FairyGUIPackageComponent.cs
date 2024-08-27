@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using FairyGUI;
 using GameFrameX.Asset.Runtime;
@@ -16,7 +17,13 @@ namespace GameFrameX.FairyGUI.Runtime
     {
         private readonly Dictionary<string, UIPackage> _uiPackages = new Dictionary<string, UIPackage>(32);
 
-        public UniTask<UIPackage> AddPackageAsync(string descFilePath)
+        /// <summary>
+        /// 异步添加UI 包
+        /// </summary>
+        /// <param name="descFilePath">UI包路径</param>
+        /// <param name="isLoadAsset">是否在加载描述文件之后, 加载资源</param>
+        /// <returns></returns>
+        public UniTask<UIPackage> AddPackageAsync(string descFilePath, bool isLoadAsset = true)
         {
             if (!_uiPackages.TryGetValue(descFilePath, out var package))
             {
@@ -24,7 +31,11 @@ namespace GameFrameX.FairyGUI.Runtime
                 UIPackage.AddPackageAsync(descFilePath, (uiPackage) =>
                 {
                     package = uiPackage;
-                    package.LoadAllAssets();
+                    if (isLoadAsset)
+                    {
+                        package.LoadAllAssets();
+                    }
+
                     _uiPackages.Add(descFilePath, package);
                     tcs.TrySetResult(package);
                 });
@@ -34,16 +45,34 @@ namespace GameFrameX.FairyGUI.Runtime
             return UniTask.FromResult(package);
         }
 
-        public void AddPackage(string descFilePath)
+        /// <summary>
+        /// 同步添加UI 包
+        /// </summary>
+        /// <param name="descFilePath">包路径</param>
+        /// <param name="complete">加载完成回调</param>
+        /// <param name="isLoadAsset">是否在加载描述文件之后, 加载资源</param>
+        public void AddPackageSync(string descFilePath, Action<UIPackage> complete, bool isLoadAsset = true)
         {
             if (!_uiPackages.TryGetValue(descFilePath, out var package))
             {
-                package = UIPackage.AddPackage(descFilePath);
-                package.LoadAllAssets();
-                _uiPackages.Add(descFilePath, package);
+                UIPackage.AddPackageAsync(descFilePath, (uiPackage) =>
+                {
+                    package = uiPackage;
+                    if (isLoadAsset)
+                    {
+                        package.LoadAllAssets();
+                    }
+
+                    _uiPackages.Add(descFilePath, package);
+                    complete?.Invoke(package);
+                });
             }
         }
 
+        /// <summary>
+        /// 移除UI 包
+        /// </summary>
+        /// <param name="descFilePath">UI包路径</param>
         public void RemovePackage(string descFilePath)
         {
             if (_uiPackages.TryGetValue(descFilePath, out var package))
@@ -53,6 +82,9 @@ namespace GameFrameX.FairyGUI.Runtime
             }
         }
 
+        /// <summary>
+        /// 移除所有UI 包
+        /// </summary>
         public void RemoveAllPackages()
         {
             UIPackage.RemoveAllPackages();
@@ -60,11 +92,21 @@ namespace GameFrameX.FairyGUI.Runtime
         }
 
 
+        /// <summary>
+        /// 是否包含UI 包
+        /// </summary>
+        /// <param name="uiPackageName">UI包名称</param>
+        /// <returns></returns>
         public bool Has(string uiPackageName)
         {
             return Get(uiPackageName) != null;
         }
 
+        /// <summary>
+        /// 获取UI 包
+        /// </summary>
+        /// <param name="uiPackageName">UI包名称</param>
+        /// <returns></returns>
         public UIPackage Get(string uiPackageName)
         {
             if (_uiPackages.TryGetValue(uiPackageName, out var package))
@@ -80,18 +122,6 @@ namespace GameFrameX.FairyGUI.Runtime
             IsAutoRegister = false;
             base.Awake();
             UIPackage.SetAsyncLoadResource(new FairyGUILoadAsyncResourceHelper());
-        }
-
-        private AssetComponent _assetComponent;
-
-        private void Start()
-        {
-            _assetComponent = GameEntry.GetComponent<AssetComponent>();
-            if (_assetComponent == null)
-            {
-                Log.Fatal("Asset component is invalid.");
-                return;
-            }
         }
     }
 }
