@@ -70,6 +70,25 @@ namespace GameFrameX.FairyGUI.Runtime
         }
 
         /// <summary>
+        /// 同步添加UI 包
+        /// </summary>
+        /// <param name="descFilePath">UI包路径</param>
+        /// <param name="isLoadAsset">是否在加载描述文件之后, 加载资源</param>
+        public void AddPackageSync(string descFilePath, bool isLoadAsset = true)
+        {
+            if (!_uiPackages.TryGetValue(descFilePath, out var package))
+            {
+                package = UIPackage.AddPackage(descFilePath);
+                if (isLoadAsset)
+                {
+                    package.LoadAllAssets();
+                }
+
+                _uiPackages.Add(descFilePath, package);
+            }
+        }
+
+        /// <summary>
         /// 移除UI 包
         /// </summary>
         /// <param name="descFilePath">UI包路径</param>
