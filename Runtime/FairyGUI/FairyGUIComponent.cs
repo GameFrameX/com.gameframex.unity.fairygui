@@ -75,23 +75,40 @@ namespace GameFrameX.FairyGUI.Runtime
         /// <param name="userData">用户自定义数据</param>
         /// <typeparam name="T"></typeparam>
         /// <returns>返回创建后的UI对象</returns>
-        public UniTask<T> AddAsync<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, bool isFullScreen = false, object userData = null) where T : FUI
+        public async UniTask<T> AddAsync<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, bool isFullScreen = false, object userData = null) where T : FUI
         {
             GameFrameworkGuard.NotNull(creator, nameof(creator));
             GameFrameworkGuard.NotNull(descFilePath, nameof(descFilePath));
-            var ts = new UniTaskCompletionSource<T>();
-            UIPackage.AddPackageAsync(descFilePath, (obj) =>
+            await _packageComponent.AddPackageAsync(descFilePath, false);
+            T ui = creator(userData);
+            Add(ui, layer);
+            if (isFullScreen)
             {
-                T ui = creator(userData);
-                Add(ui, layer);
-                if (isFullScreen)
-                {
-                    ui.MakeFullScreen();
-                }
+                ui.MakeFullScreen();
+            }
 
-                ts.TrySetResult(ui);
-            });
-            return ts.Task;
+            return ui;
+        }
+
+        /// <summary>
+        /// 添加UI对象
+        /// </summary>
+        /// <param name="ui">UI创建器</param>
+        /// <param name="layer">目标层级</param>
+        /// <param name="isFullScreen">是否全屏</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>返回创建后的UI对象</returns>
+        /// <exception cref="ArgumentNullException">创建器不存在,引发参数异常</exception>
+        public T AddUI<T>(T ui, UILayer layer, bool isFullScreen = false) where T : FUI
+        {
+            Add(ui, layer);
+
+            if (isFullScreen)
+            {
+                ui.MakeFullScreen();
+            }
+
+            return ui;
         }
 
         /// <summary>
@@ -109,15 +126,25 @@ namespace GameFrameX.FairyGUI.Runtime
         {
             GameFrameworkGuard.NotNull(creator, nameof(creator));
             GameFrameworkGuard.NotNull(descFilePath, nameof(descFilePath));
-            _packageComponent.AddPackage(descFilePath);
-            T ui = creator(userData);
-            Add(ui, layer);
-            if (isFullScreen)
+            return AddAsync(creator, descFilePath, layer, isFullScreen, userData).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// 销毁UI
+        /// </summary>
+        /// <param name="ui">UI对象</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>返回是否销毁成功</returns>
+        public bool Dispose<T>(T ui) where T : FUI
+        {
+            GameFrameworkGuard.NotNull(ui, nameof(ui));
+            if (Remove(ui.Name))
             {
-                ui.MakeFullScreen();
+                ui.Dispose();
+                return true;
             }
 
-            return ui;
+            return false;
         }
 
         /// <summary>
