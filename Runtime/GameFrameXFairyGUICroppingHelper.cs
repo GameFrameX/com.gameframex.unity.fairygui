@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -6,27 +7,32 @@ namespace GameFrameX.FairyGUI.Runtime
     [Preserve]
     public class GameFrameXFairyGUICroppingHelper : MonoBehaviour
     {
+        private Type[] m_Types;
+
         [Preserve]
         private void Start()
         {
-            _ = typeof(CloseUIFormCompleteEventArgs);
-            _ = typeof(IUIForm);
-            _ = typeof(IUIFormHelper);
-            _ = typeof(IUIGroup);
-            _ = typeof(IUIGroupHelper);
-            _ = typeof(IUIManager);
-            _ = typeof(OpenUIFormDependencyAssetEventArgs);
-            _ = typeof(OpenUIFormFailureEventArgs);
-            _ = typeof(OpenUIFormSuccessEventArgs);
-            _ = typeof(OpenUIFormUpdateEventArgs);
-            _ = typeof(UIManager);
-            _ = typeof(UILayer);
-            _ = typeof(GObjectHelper);
-            _ = typeof(FUI);
-            _ = typeof(FairyGUIComponent);
-            _ = typeof(FairyGUILoadAsyncResourceHelper);
-            _ = typeof(FairyGUIPackageComponent);
-            _ = typeof(FairyGUIPathFinderHelper);
+            m_Types = new[]
+            {
+                typeof(CloseUIFormCompleteEventArgs),
+                typeof(IUIForm),
+                typeof(IUIFormHelper),
+                typeof(IUIGroup),
+                typeof(IUIGroupHelper),
+                typeof(IUIManager),
+                typeof(OpenUIFormDependencyAssetEventArgs),
+                typeof(OpenUIFormFailureEventArgs),
+                typeof(OpenUIFormSuccessEventArgs),
+                typeof(OpenUIFormUpdateEventArgs),
+                typeof(UIManager),
+                typeof(UILayer),
+                typeof(GObjectHelper),
+                typeof(FUI),
+                typeof(FairyGUIComponent),
+                typeof(FairyGUILoadAsyncResourceHelper),
+                typeof(FairyGUIPackageComponent),
+                typeof(FairyGUIPathFinderHelper),
+            };
         }
     }
 }
