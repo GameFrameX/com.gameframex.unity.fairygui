@@ -60,9 +60,24 @@ namespace GameFrameX.FairyGUI.Runtime
         /// <param name="userData">用户自定义数据</param>
         /// <typeparam name="T"></typeparam>
         /// <returns>返回创建后的UI对象</returns>
+        [Obsolete("Use AddToFullScreenAsync instead")]
         public T AddToFullScreen<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, object userData = null) where T : FUI
         {
             return Add(creator, descFilePath, layer, true, userData);
+        }
+
+        /// <summary>
+        /// 添加全屏UI对象
+        /// </summary>
+        /// <param name="creator">UI创建器</param>
+        /// <param name="descFilePath">UI目录</param>
+        /// <param name="layer">目标层级</param>
+        /// <param name="userData">用户自定义数据</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>返回创建后的UI对象</returns>
+        public UniTask<T> AddToFullScreenAsync<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, object userData = null) where T : FUI
+        {
+            return AddAsync(creator, descFilePath, layer, true, userData);
         }
 
         /// <summary>
@@ -122,11 +137,20 @@ namespace GameFrameX.FairyGUI.Runtime
         /// <typeparam name="T"></typeparam>
         /// <returns>返回创建后的UI对象</returns>
         /// <exception cref="ArgumentNullException">创建器不存在,引发参数异常</exception>
+        [Obsolete("Use AddAsync instead")]
         public T Add<T>(System.Func<object, T> creator, string descFilePath, UILayer layer, bool isFullScreen = false, object userData = null) where T : FUI
         {
             GameFrameworkGuard.NotNull(creator, nameof(creator));
             GameFrameworkGuard.NotNull(descFilePath, nameof(descFilePath));
-            return AddAsync(creator, descFilePath, layer, isFullScreen, userData).GetAwaiter().GetResult();
+            _packageComponent.AddPackageSync(descFilePath);
+            T ui = creator(userData);
+            Add(ui, layer);
+            if (isFullScreen)
+            {
+                ui.MakeFullScreen();
+            }
+
+            return ui;
         }
 
         /// <summary>
