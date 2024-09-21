@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using GameFrameX.Asset.Runtime;
 using GameFrameX.ObjectPool;
+using GameFrameX.Runtime;
 
 namespace GameFrameX.FairyGUI.Runtime
 {
