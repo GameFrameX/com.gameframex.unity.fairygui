@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/gameframex/com.gameframex.unity.fairygui/compare/1.0.5...1.1.0) (2025-12-23)
+
+
+### Features
+
+* **ci:** change ci ([ab1e661](https://github.com/gameframex/com.gameframex.unity.fairygui/commit/ab1e66119052f2c0624f8cfe959857662f05e583))
+
 # Changelog
 
 ## [1.0.5](https://github.com/GameFrameX/com.gameframex.unity.fairygui/tree/1.0.5) (2025-06-01)
