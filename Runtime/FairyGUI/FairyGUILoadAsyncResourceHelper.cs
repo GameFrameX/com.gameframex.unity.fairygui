@@ -52,7 +52,7 @@ namespace GameFrameX.FairyGUI.Runtime
             }
 
             var allAssetsHandle = await assetComponent.LoadAllAssetsAsync(assetName);
-            if (!allAssetsHandle.IsSucceed)
+            if (!allAssetsHandle.IsDone)
             {
                 action.Invoke(false, assetName, null);
                 return;
