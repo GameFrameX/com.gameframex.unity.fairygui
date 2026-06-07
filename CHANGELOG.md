@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/gameframex/com.gameframex.unity.fairygui/compare/1.1.0...1.1.1) (2026-06-07)
+
+
+### Bug Fixes
+
+* 补全包规范文件（LICENSE/CHANGELOG/URL 字段/unity 字段） ([f903692](https://github.com/gameframex/com.gameframex.unity.fairygui/commit/f903692b762ffa6d1255d41d369402fd1e215800))
+
 # [1.1.0](https://github.com/gameframex/com.gameframex.unity.fairygui/compare/1.0.5...1.1.0) (2025-12-23)
 
 
