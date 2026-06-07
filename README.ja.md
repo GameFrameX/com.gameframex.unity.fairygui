@@ -20,6 +20,7 @@
 [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | **日本語** | [한국어](README.ko.md)
 
 </div>
+
 ## プロジェクト概要
 
 **FairyGUI コンポーネント (FairyGUI Component)** - Game Frame X フレームワーク内で FairyGUI を統合するためのインターフェースを提供します。
