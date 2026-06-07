@@ -57,7 +57,6 @@ Then add the package to `dependencies`:
 }
 ```
 
-
 ## ドキュメントとリソース
 
 - [ドキュメント](https://gameframex.doc.alianblank.com)
@@ -72,4 +71,4 @@ Then add the package to `dependencies`:
 
 ## ライセンス
 
-このプロジェクトは [MIT ライセンス](https://github.com/gameframex/com.gameframex.unity.fairygui/blob/main/LICENSE) の下で公開されています。
+詳しくは [LICENSE.md](LICENSE.md) をご参照ください。

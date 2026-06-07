@@ -57,7 +57,6 @@ Then add the package to `dependencies`:
 }
 ```
 
-
 ## Documentation & Resources
 
 - [Documentation](https://gameframex.doc.alianblank.com)
@@ -72,4 +71,4 @@ See [Releases](https://github.com/gameframex/com.gameframex.unity.fairygui/relea
 
 ## License
 
-This project is licensed under the [MIT License](https://github.com/gameframex/com.gameframex.unity.fairygui/blob/main/LICENSE).
+See [LICENSE.md](LICENSE.md) for license information.

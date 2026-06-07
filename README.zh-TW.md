@@ -57,7 +57,6 @@ Then add the package to `dependencies`:
 }
 ```
 
-
 ## 文檔與資源
 
 - [文檔](https://gameframex.doc.alianblank.com)
@@ -72,4 +71,4 @@ Then add the package to `dependencies`:
 
 ## 開源協議
 
-本專案基於 [MIT 協議](https://github.com/gameframex/com.gameframex.unity.fairygui/blob/main/LICENSE) 開源。
+詳見 [LICENSE.md](LICENSE.md) 檔案。
