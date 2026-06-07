@@ -29,16 +29,34 @@ The **FairyGUI Component** provides interfaces for integrating FairyGUI within t
 
 ### Installation
 
-Choose one of the following methods:
+Edit your Unity project's `Packages/manifest.json` and add the `scopedRegistries` section:
 
-1. Add to `manifest.json` dependencies:
-   ```json
-   {
-      "com.gameframex.unity.fairygui": "https://github.com/AlianBlank/com.gameframex.unity.fairygui.git"
-   }
-   ```
-2. Use **Packages Manager** in Unity with **Git URL**: `https://github.com/AlianBlank/com.gameframex.unity.fairygui.git`
-3. Clone the repository into your Unity project's `Packages` directory. It will be loaded automatically.
+```json
+{
+  "scopedRegistries": [
+    {
+      "name": "GameFrameX",
+      "url": "https://gameframex.upm.alianblank.uk",
+      "scopes": [
+        "com.gameframex"
+      ]
+    }
+  ]
+}
+```
+
+`scopes` controls which packages are resolved through this registry. Only packages whose names start with `com.gameframex` will be fetched from it.
+
+Then add the package to `dependencies`:
+
+```json
+{
+  "dependencies": {
+    "com.gameframex.unity.fairygui": "1.1.0"
+  }
+}
+```
+
 
 ## Documentation & Resources
 
